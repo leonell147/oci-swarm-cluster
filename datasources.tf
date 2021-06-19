@@ -132,7 +132,6 @@ data "template_file" "cloud_init" {
   template = file("${path.module}/scripts/cloud-config.template.yaml")
 
   vars = {
-    catalogue_sql_template_content = base64gzip(data.template_file.catalogue_sql_template.rendered)
     docker_compose_yml_content     = base64gzip(data.local_file.docker_compose_yml.content)
     catalogue_password             = random_string.catalogue_db_password.result
     catalogue_port                 = local.catalogue_port
