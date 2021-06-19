@@ -1,4 +1,4 @@
-version: '3.0'
+version: '3.6'
 services:
   whoami:
      image: traefik/whoami:v1.6.1
@@ -19,8 +19,8 @@ services:
   
   rasa:
     image: rasa/rasa:2.6.3-full
-    #ports:
-    #  - 5005:5005
+    ports:
+      - 5005:5005
     volumes:
       - ./:/app
     command:
@@ -45,8 +45,8 @@ services:
     container_name: action-server
   flask:
     image: leonell147/agiletalk:v2
-    #ports:
-    #  - 5000:5000
+    ports:
+      - 5000:5000
     networks:
             - lb_network
     deploy:
@@ -104,6 +104,13 @@ services:
             - --accesslog.filters.minduration=10ms
         networks:
             - lb_network
+volumes:
+  rasa:
+    driver: s3fs
+    name: "oci-rasa-$DEPLOY_ID"
+  patbot:
+    driver: s3fs
+    name: "oci-patbot-$DEPLOY_ID"
 networks:
   # Use the previously created public network "traefik-public", shared with other
   # services that need to be publicly available via this Traefik
