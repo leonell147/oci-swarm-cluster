@@ -161,24 +161,7 @@ data "template_file" "setup_template" {
     private_key_pem  = tls_private_key.compute_ssh_key.private_key_pem
   }
 }
-"data "template_file" "deploy_template" {
-  template = file("${path.module}/scripts/deploy.template.sh")
 
-  vars = {
-    oracle_client_version   = var.oracle_client_version
-    db_name                 = oci_database_autonomous_database.oci_swarm_autonomous_database.db_name
-    atp_pw                  = random_string.autonomous_database_admin_password.result
-    oci_swarm_media_visibility = var.object_storage_oci_swarm_media_visibility
-    wallet_par              = "https://objectstorage.${var.region}.oraclecloud.com${oci_objectstorage_preauthrequest.oci_swarm_wallet_preauth.access_uri}"
-  }
-}
-data "template_file" "catalogue_sql_template" {
-  template = file("${path.module}/scripts/catalogue.template.sql")
-
-  vars = {
-    catalogue_password = random_string.catalogue_db_password.result
-  }
-}"
 data "local_file" "docker_compose_yml" {
   filename = "${path.module}/scripts/docker-compose.yml"
 }
