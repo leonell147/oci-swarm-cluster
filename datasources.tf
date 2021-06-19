@@ -152,15 +152,6 @@ data "template_file" "cloud_init" {
 #data "template_file" "setup_preflight" {
 #  template = file("${path.module}/scripts/setup.preflight.sh")
 #}
-data "template_file" "setup_template" {
-  template = file("${path.module}/scripts/setup.template.sh")
-
-  vars = {
-    oracle_client_version = var.oracle_client_version
-    public_key_openssh = tls_private_key.compute_ssh_key.public_key_openssh
-    private_key_pem  = tls_private_key.compute_ssh_key.private_key_pem
-  }
-}
 
 data "local_file" "docker_compose_yml" {
   filename = "${path.module}/scripts/docker-compose.yml"
