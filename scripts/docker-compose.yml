@@ -34,7 +34,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.rasa.rule=(Host(`dev-oci.mydomain.com`) && PathPrefix(`/`))
+                - traefik.http.routers.rasa.rule=Path(`/rasa`)
                 - traefik.http.routers.rasa.entrypoints=https
                 - traefik.http.routers.rasa.tls=true
                 - traefik.http.services.rasa.loadbalancer.server.port=5005 
@@ -56,7 +56,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.flask.rule=(Host(`dev-oci.mydomain.com`) && PathPrefix(`/`))
+                - traefik.http.routers.flask.rule=Path(`/flask`)
                 - traefik.http.routers.flask.entrypoints=https
                 - traefik.http.routers.flask.tls=true
                 - traefik.http.services.flask.loadbalancer.server.port=5000
@@ -111,6 +111,9 @@ volumes:
   patbot:
     driver: s3fs
     name: "oci-patbot-$DEPLOY_ID"
+  flask:
+    driver: s3f
+    name: "oci-flask-$DEPLOY_ID"
 networks:
   # Use the previously created public network "traefik-public", shared with other
   # services that need to be publicly available via this Traefik
