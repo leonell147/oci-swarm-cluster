@@ -149,9 +149,9 @@ data "template_file" "cloud_init" {
     assets_url                     = var.object_storage_oci_swarm_media_visibility == "Private" ? "" : "https://objectstorage.${var.region}.oraclecloud.com/n/${oci_objectstorage_bucket.oci_swarm_media.namespace}/b/${oci_objectstorage_bucket.oci_swarm_media.name}/o/"
   }
 }
-data "template_file" "setup_preflight" {
-  template = file("${path.module}/scripts/setup.preflight.sh")
-}
+#data "template_file" "setup_preflight" {
+#  template = file("${path.module}/scripts/setup.preflight.sh")
+#}
 data "template_file" "setup_template" {
   template = file("${path.module}/scripts/setup.template.sh")
 
@@ -161,7 +161,7 @@ data "template_file" "setup_template" {
     private_key_pem  = tls_private_key.compute_ssh_key.private_key_pem
   }
 }
-data "template_file" "deploy_template" {
+"data "template_file" "deploy_template" {
   template = file("${path.module}/scripts/deploy.template.sh")
 
   vars = {
@@ -178,7 +178,7 @@ data "template_file" "catalogue_sql_template" {
   vars = {
     catalogue_password = random_string.catalogue_db_password.result
   }
-}
+}"
 data "local_file" "docker_compose_yml" {
   filename = "${path.module}/scripts/docker-compose.yml"
 }
