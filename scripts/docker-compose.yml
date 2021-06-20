@@ -34,8 +34,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.rasa.rule=Host(`rasa.140.238.238.112`) 
-                - traefik.http.routers.rasa.entrypoints=https
+                - traefik.http.routers.rasa.entrypoints=rasa
                 - traefik.http.routers.rasa.tls=true
                 - traefik.http.services.rasa.loadbalancer.server.port=5005 
   patbot:
@@ -56,8 +55,8 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.flask.rule=Host(`flask.140.238.238.112`)
-                - traefik.http.routers.flask.entrypoints=https
+
+                - traefik.http.routers.flask.entrypoints=flask
                 - traefik.http.routers.flask.tls=true
                 - traefik.http.services.flask.loadbalancer.server.port=5000
   traefik:
@@ -69,6 +68,14 @@ services:
               mode: host
             - target: 443
               published: 443
+              protocol: tcp
+              mode: host
+            - target: 5000
+              published: 5000
+              protocol: tcp
+              mode: host
+            - target: 5005
+              published: 5005
               protocol: tcp
               mode: host
         deploy:
@@ -90,6 +97,8 @@ services:
             - --providers.docker.swarmmode
             - --entrypoints.http.address=:80
             - --entrypoints.https.address=:443
+            - --entrypoints.rasa.address=:5005
+            - --entrypoints.flask.address=:5000
             - --serversTransport.insecureSkipVerify=true
             - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,10.1.22.0/24
             #- --entryPoints.https.forwardedHeaders.trustedIPs=127.0.0.1/32,129.144.0.0/12,129.144.0.0/12,129.213.0.0/16,130.35.0.0/16,132.145.0.0/16,134.70.0.0/16,138.1.0.0/16,140.204.0.0/16,140.91.0.0/16,147.154.0.0/16,192.157.18.0/23,192.29.0.0/16,192.69.118.0/23,198.181.48.0/21,199.195.6.0/23,205.147.88.0/21
