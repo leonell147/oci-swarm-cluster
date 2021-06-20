@@ -34,6 +34,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
+                - traefik.http.routers.whoami.rule=Path(`/rasa`)
                 - traefik.http.routers.rasa.entrypoints=rasa
                 - traefik.http.routers.rasa.tls=true
                 - traefik.http.services.rasa.loadbalancer.server.port=5005 
@@ -55,7 +56,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-
+                - traefik.http.routers.whoami.rule=Path(`/flask`)
                 - traefik.http.routers.flask.entrypoints=flask
                 - traefik.http.routers.flask.tls=true
                 - traefik.http.services.flask.loadbalancer.server.port=5000
@@ -70,12 +71,6 @@ services:
               published: 443
               protocol: tcp
               mode: host
-            - target: 5000
-              published: 5000
-              protocol: tcp
-              mode: host
-            - target: 5005
-              published: 5005
               protocol: tcp
               mode: host
         deploy:
