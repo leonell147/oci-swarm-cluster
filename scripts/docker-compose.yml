@@ -9,7 +9,7 @@ services:
     command:
       - run
     ports:
-        - 5000:5000
+        - 5005:5005
     networks:
             - lb_network
     deploy:
@@ -21,8 +21,8 @@ services:
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
                 - traefik.http.routers.rasa.rule=(Host(`process.action.bot`) && PathPrefix(`/`))
-                - traefik.http.routers.rasa.entrypoints=http
-                - traefik.http.routers.rasa.tls=true
+                #- traefik.http.routers.rasa.entrypoints=http
+                #- traefik.http.routers.rasa.tls=true
                 - traefik.http.services.rasa.loadbalancer.server.port=5005
   patbot:
     image: leonell147/action-server:v3
@@ -44,8 +44,8 @@ services:
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
                 - traefik.http.routers.flask.rule=(Host(`sintetic.world`) && PathPrefix(`/`))
-                - traefik.http.routers.flask.entrypoints=http
-                - traefik.http.routers.flask.tls=true
+                #- traefik.http.routers.flask.entrypoints=http
+                #- traefik.http.routers.flask.tls=true
                 - traefik.http.services.flask.loadbalancer.server.port=5000
   traefik:
         image: traefik:v2.4.2
