@@ -71,6 +71,10 @@ services:
               published: 443
               protocol: tcp
               mode: host
+            - target: 5000
+              published: 5000
+              protocol: tcp
+              mode: host
         deploy:
             mode: global
             placement:
