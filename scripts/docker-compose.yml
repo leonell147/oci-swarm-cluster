@@ -19,8 +19,6 @@ services:
   
   rasa:
     image: rasa/rasa:2.6.3-full
-    ports:
-      - 5005:5005
     volumes:
       - ./:/app
     command:
@@ -45,8 +43,6 @@ services:
     container_name: action-server
   flask:
     image: leonell147/agiletalk:v2
-    ports:
-      - 5000:5000
     networks:
             - lb_network
     deploy:
@@ -71,6 +67,12 @@ services:
               published: 443
               protocol: tcp
               mode: host
+            - target: 5000
+              published: 5000
+              protocol: tcp
+              mode: host
+            - target: 5005
+              published: 5005
               protocol: tcp
               mode: host
         deploy:
