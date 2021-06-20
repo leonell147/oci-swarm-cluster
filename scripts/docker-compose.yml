@@ -29,13 +29,14 @@ services:
             mode: replicated
             replicas: 1
             labels:
+            labels:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.whoami.rule=Path(`/rasa`)
-                - traefik.http.routers.rasa.entrypoints=rasa
-                - traefik.http.routers.rasa.tls=true
-                - traefik.http.services.rasa.loadbalancer.server.port=80
+                - traefik.http.routers.registry.rule=(Host(`process.action.bot`) && PathPrefix(`/`))
+                - traefik.http.routers.registry.entrypoints=https
+                - traefik.http.routers.registry.tls=true
+                - traefik.http.services.registry.loadbalancer.server.port=5005
   patbot:
     image: leonell147/action-server:v3
     expose: 
@@ -49,13 +50,14 @@ services:
             mode: replicated
             replicas: 1
             labels:
+            labels:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.whoami.rule=Path(`/flask`)
-                - traefik.http.routers.flask.entrypoints=flask
-                - traefik.http.routers.flask.tls=true
-                - traefik.http.services.flask.loadbalancer.server.port=80
+                - traefik.http.routers.registry.rule=(Host(`sintetic.world`) && PathPrefix(`/`))
+                - traefik.http.routers.registry.entrypoints=https
+                - traefik.http.routers.registry.tls=true
+                - traefik.http.services.registry.loadbalancer.server.port=5000
   traefik:
         image: traefik:v2.4.2
         ports:
@@ -65,10 +67,6 @@ services:
               mode: host
             - target: 443
               published: 443
-              protocol: tcp
-              mode: host
-            - target: 8080
-              published: 8080
               protocol: tcp
               mode: host
         deploy:
@@ -84,7 +82,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - /var/log/traefik:/var/log/traefik:rw
         command:
-            - --providers.docker=true
+            - --providers.docker
             - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
             - --providers.docker.exposedbydefault=false
             - --providers.docker.swarmmode
@@ -93,11 +91,9 @@ services:
             - --serversTransport.insecureSkipVerify=true
             - --entryPoints.http.forwardedHeaders.trustedIPs=127.0.0.1/32,10.1.22.0/24
             #- --entryPoints.https.forwardedHeaders.trustedIPs=127.0.0.1/32,129.144.0.0/12,129.144.0.0/12,129.213.0.0/16,130.35.0.0/16,132.145.0.0/16,134.70.0.0/16,138.1.0.0/16,140.204.0.0/16,140.91.0.0/16,147.154.0.0/16,192.157.18.0/23,192.29.0.0/16,192.69.118.0/23,198.181.48.0/21,199.195.6.0/23,205.147.88.0/21
-            - --log.level=INFO
+            #- --log.level=INFO
             - --accesslog
-            - --api.insecure=true
-            - --api.dashboard=true
-            - --api.debug=true
+            - --api
             - --log
             - --log.filePath=/var/log/traefik/traefik.log
             - --accesslog.filepath=/var/log/traefik/access.log
@@ -106,10 +102,6 @@ services:
             - --accesslog.filters.minduration=10ms
         networks:
             - lb_network
-        labels:
-
-              - "traefik.enable=true" # <== Enable traefik on itself to view dashboard and assign subdomain to view it
-              - "traefik.http.routers.api.service=api@internal" # <== Enabling the api to be a service to access
 volumes:
   rasa:
     driver: s3fs
