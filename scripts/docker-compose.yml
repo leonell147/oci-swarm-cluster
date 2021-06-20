@@ -34,7 +34,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.rasa.rule=(Host(`process.action.bot`) && PathPrefix(`/`))
+                - traefik.http.routers.rasa.rule=(Host(`process.action.bot`) && PathPrefix(`/rasa`))
                 - traefik.http.routers.rasa.entrypoints=https
                 - traefik.http.routers.rasa.tls=true
                 - traefik.http.services.rasa.loadbalancer.server.port=5005 
@@ -56,8 +56,7 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.flask.rule=(Host(`flask.app`) && PathPrefix(`/`))
-                - traefik.http.routers.flask.entrypoints=https
+                - traefik.http.routers.flask.rule=PathPrefix(`/flask`)
                 - traefik.http.routers.flask.tls=true
                 - traefik.http.services.flask.loadbalancer.server.port=5000
   traefik:
