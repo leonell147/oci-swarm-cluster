@@ -1,21 +1,6 @@
 version: '3.6'
 services:
-  whoami:
-     image: traefik/whoami:v1.6.1
-     deploy:
-       mode: replicated
-       replicas: 1
-       labels:
-        - traefik.enable=true
-        - traefik.docker.network=lb_network
-        - traefik.constraint-label=traefik-public
-        - traefik.http.routers.whoami.rule=Path(`/whoami`)
-        # - traefik.http.routers.whoami.entrypoints=https
-        # - traefik.http.routers.whoami.tls=true
-        - traefik.http.services.whoami.loadbalancer.server.port=80
-     networks:
-       - lb_network
-  
+ 
   
   rasa:
     image: rasa/rasa:2.6.3-full
@@ -34,7 +19,7 @@ services:
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
                 - traefik.http.routers.rasa.rule=(Host(`process.action.bot`) && PathPrefix(`/`))
-                - traefik.http.routers.rasa.entrypoints=https
+                - traefik.http.routers.rasa.entrypoints=http
                 - traefik.http.routers.rasa.tls=true
                 - traefik.http.services.rasa.loadbalancer.server.port=5005
   patbot:
@@ -55,7 +40,7 @@ services:
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
                 - traefik.http.routers.flask.rule=(Host(`sintetic.world`) && PathPrefix(`/`))
-                - traefik.http.routers.flask.entrypoints=https
+                - traefik.http.routers.flask.entrypoints=http
                 - traefik.http.routers.flask.tls=true
                 - traefik.http.services.flask.loadbalancer.server.port=5000
   traefik:
