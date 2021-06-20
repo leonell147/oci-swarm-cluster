@@ -33,10 +33,10 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.registry.rule=(Host(`process.action.bot`) && PathPrefix(`/`))
-                - traefik.http.routers.registry.entrypoints=https
-                - traefik.http.routers.registry.tls=true
-                - traefik.http.services.registry.loadbalancer.server.port=5005
+                - traefik.http.routers.rasa.rule=(Host(`process.action.bot`) && PathPrefix(`/`))
+                - traefik.http.routers.rasa.entrypoints=https
+                - traefik.http.routers.rasa.tls=true
+                - traefik.http.services.rasa.loadbalancer.server.port=5005
   patbot:
     image: leonell147/action-server:v3
     expose: 
@@ -46,7 +46,6 @@ services:
     image: leonell147/agiletalk:v2
     networks:
             - lb_network
-    ports: 5000:5000
     deploy:
             mode: replicated
             replicas: 1
@@ -55,10 +54,10 @@ services:
                 - traefik.enable=true
                 - traefik.docker.network=lb_network
                 - traefik.constraint-label=traefik-public
-                - traefik.http.routers.registry.rule=(Host(`sintetic.world`) && PathPrefix(`/`))
-                - traefik.http.routers.registry.entrypoints=https
-                - traefik.http.routers.registry.tls=true
-                - traefik.http.services.registry.loadbalancer.server.port=5000
+                - traefik.http.routers.flask.rule=(Host(`sintetic.world`) && PathPrefix(`/`))
+                - traefik.http.routers.flask.entrypoints=https
+                - traefik.http.routers.flask.tls=true
+                - traefik.http.services.flask.loadbalancer.server.port=5000
   traefik:
         image: traefik:v2.4.2
         ports:
