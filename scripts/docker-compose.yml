@@ -8,6 +8,8 @@ services:
       - ./:/app
     command:
       - run
+    ports:
+        - 5000:5000
     networks:
             - lb_network
     deploy:
@@ -31,6 +33,8 @@ services:
     image: leonell147/agiletalk:v2
     networks:
             - lb_network
+    ports:
+          - 5000:5000
     deploy:
             mode: replicated
             replicas: 1
